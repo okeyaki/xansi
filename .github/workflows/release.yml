@@ -29,9 +29,14 @@ jobs:
           args: '--all-features --release --target ${{ matrix.target }} --verbose'
           use-cross: true
 
+      - run: |
+          cd target/${{ matrix.target }}/release/
+          chmod +x xansi
+          tar -c xansi | gzip > xansi-${{ matrix.target }}.tar.gz
+
       - uses: 'svenstaro/upload-release-action@2.1.1'
         with:
-          file: 'target/${{ matrix.target }}/release/xansi'
+          file: 'target/${{ matrix.target }}/release/xansi-${{ matrix.target }}.tar.gz'
           tag: '${{ github.ref }}'
-          asset_name: 'xansi-${{ matrix.target }}'
+          asset_name: 'xansi-${{ matrix.target }}.tar.gz'
           repo_token: '${{ secrets.GITHUB_TOKEN }}'
